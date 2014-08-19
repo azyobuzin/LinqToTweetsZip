@@ -44,14 +44,13 @@
   <ItemGroup>
     <Compile Include="Entities.cs" />
     <Compile Include="Entity.cs" />
-    <Compile Include="Extensions.cs" />
+    <Compile Include="JavaScriptConvert.cs" />
     <Compile Include="Geo.cs" />
     <Compile Include="HashtagEntity.cs" />
     <Compile Include="MediaEntity.cs" />
     <Compile Include="MediaSize.cs" />
     <Compile Include="MonthlyTweets.cs" />
     <Compile Include="ITweetsZipSource.cs" />
-    <Compile Include="JsonDeserializer.cs" />
     <Compile Include="Lazy.cs" />
     <Compile Include="PayloadDetails.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
