@@ -1,40 +1,75 @@
 ﻿using System;
-using Newtonsoft.Json;
 
 namespace LinqToTweetsZip
 {
     public class Tweet
     {
-        [JsonProperty("source")]
-        public string Source { get; private set; }
+        internal Tweet(MonthlyTweets parent, int index)
+        {
+            this.data = Lazy.Create(() => parent.data.Value[index]);
+            this.year = parent.Year;
+            this.month = parent.Month;
+        }
 
-        [JsonProperty("entities")]
-        public Entities Entities { get; private set; }
+        private readonly Lazy<TweetData> data;
 
-        [JsonProperty("geo")]
-        public Geo Geo { get; private set; }
+        public string Source
+        {
+            get
+            {
+                return this.data.Value.Source;
+            }
+        }
 
-        [JsonProperty("id")]
-        public ulong Id { get; private set; }
+        public Entities Entities
+        {
+            get
+            {
+                return this.data.Value.Entities;
+            }
+        }
 
-        [JsonProperty("text")]
-        public string Text { get; private set; }
+        public Geo Geo
+        {
+            get
+            {
+                return this.data.Value.Geo;
+            }
+        }
 
-        [JsonProperty]
-        private string created_at { get; set; }
+        public ulong Id
+        {
+            get
+            {
+                return this.data.Value.Id;
+            }
+        }
 
-        private DateTimeOffset? createdAt;
+        public string Text
+        {
+            get
+            {
+                return this.data.Value.Text;
+            }
+        }
+
         public DateTimeOffset CreatedAt
         {
             get
             {
-                if (!this.createdAt.HasValue)
-                    this.createdAt = DateTimeOffset.Parse(this.created_at);
-                return this.createdAt.Value;
+                return this.data.Value.CreatedAt;
             }
         }
 
-        [JsonProperty("user")]
-        public User User { get; private set; }
+        public User User
+        {
+            get
+            {
+                return this.data.Value.User;
+            }
+        }
+
+        internal readonly int year;
+        internal readonly int month;
     }
 }

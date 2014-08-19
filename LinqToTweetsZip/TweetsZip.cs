@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace LinqToTweetsZip
 {
-    public class TweetsZip : IReadOnlyList<MonthlyTweets>
+    public class TweetsZip
     {
         public TweetsZip(ITweetsZipSource source)
         {
@@ -22,7 +22,7 @@ namespace LinqToTweetsZip
         private readonly Lazy<List<MonthlyTweets>> months;
         private readonly Lazy<UserDetails> userDetails;
 
-        public uint Tweets
+        public uint TweetsCount
         {
             get
             {
@@ -46,30 +46,11 @@ namespace LinqToTweetsZip
             }
         }
 
-        public int Count
+        public IReadOnlyList<MonthlyTweets> Months
         {
             get
             {
-                return this.months.Value.Count;
-            }
-        }
-
-        public IEnumerator<MonthlyTweets> GetEnumerator()
-        {
-            foreach (var m in this.months.Value)
-                yield return m;
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return this.GetEnumerator();
-        }
-
-        public MonthlyTweets this[int index]
-        {
-            get
-            {
-                return this.months.Value[index];
+                return this.months.Value;
             }
         }
     }

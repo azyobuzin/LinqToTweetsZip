@@ -42,6 +42,7 @@
     <Reference Include="System.IO.Compression.FileSystem" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TweetsZipQueryProvider.cs" />
     <Compile Include="Entities.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="JavaScriptConvert.cs" />
@@ -55,10 +56,12 @@
     <Compile Include="PayloadDetails.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tweet.cs" />
+    <Compile Include="TweetData.cs" />
     <Compile Include="TweetIndexItem.cs" />
     <Compile Include="TweetsZip.cs" />
     <Compile Include="TweetsZipDirectorySource.cs" />
     <Compile Include="TweetsZipFileSource.cs" />
+    <Compile Include="TweetsZipQueryable.cs" />
     <Compile Include="UrlEntity.cs" />
     <Compile Include="User.cs" />
     <Compile Include="UserDetails.cs" />
