@@ -24,7 +24,7 @@ namespace LinqToTweetsZip
         private string created_at { get; set; }
 
         private DateTimeOffset? createdAt;
-        internal DateTimeOffset CreatedAt
+        public DateTimeOffset CreatedAt
         {
             get
             {
