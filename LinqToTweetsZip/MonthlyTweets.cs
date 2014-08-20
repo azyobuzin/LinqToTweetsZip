@@ -62,5 +62,10 @@ namespace LinqToTweetsZip
         {
             return this.GetEnumerator();
         }
+
+        public void Load()
+        {
+            var _ = data.Value;
+        }
     }
 }

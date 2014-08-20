@@ -55,5 +55,13 @@ namespace LinqToTweetsZip
         }
 
         public IQueryable<Tweet> Tweets { get; private set; }
+
+        public void LoadAll()
+        {
+            var _ = this.payloadDetails.Value;
+            var __ = this.userDetails.Value;
+            foreach (var m in this.Months)
+                m.Load();
+        }
     }
 }
