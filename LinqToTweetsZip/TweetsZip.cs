@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -16,6 +15,7 @@ namespace LinqToTweetsZip
                     .ToList()
             );
             this.userDetails = Lazy.Create(() => source.Read<UserDetails>("data", "js", "user_details.js"));
+            this.Tweets = new TweetsZipQueryable<Tweet>(this);
         }
 
         private readonly Lazy<PayloadDetails> payloadDetails;
@@ -53,5 +53,7 @@ namespace LinqToTweetsZip
                 return this.months.Value;
             }
         }
+
+        public IQueryable<Tweet> Tweets { get; private set; }
     }
 }

@@ -14,9 +14,9 @@ namespace LinqToTweetsZip
             this.expression = expression;
         }
 
-        internal TweetsZipQueryable(TweetsZipQueryProvider provider)
+        internal TweetsZipQueryable(TweetsZip context)
         {
-            this.provider = provider;
+            this.provider = new TweetsZipQueryProvider(context);
             this.expression = Expression.Constant(this);
         }
 

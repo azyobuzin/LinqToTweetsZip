@@ -12,14 +12,14 @@ namespace LinqToTweetsZip
             this.data = Lazy.Create(() =>
                 source.Read<List<TweetData>>("data", "js", "tweets", string.Format("{0:D4}_{1:D2}.js", info.year, info.month)));
             var count = info.tweet_count;
-            this.tweets = new Tweet[count];
+            this.tweets = new List<Tweet>(count);
             for (var i = 0; i < count; i++)
-                this.tweets[i] = new Tweet(this, i);
+                this.tweets.Add(new Tweet(this, i));
         }
 
         private readonly TweetIndexItem info;
         internal readonly Lazy<List<TweetData>> data;
-        private readonly Tweet[] tweets;
+        private readonly List<Tweet> tweets;
 
         public int Year
         {
@@ -55,12 +55,12 @@ namespace LinqToTweetsZip
 
         public IEnumerator<Tweet> GetEnumerator()
         {
-            return (IEnumerator<Tweet>)this.tweets.GetEnumerator();
+            return this.tweets.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return this.tweets.GetEnumerator();
+            return this.GetEnumerator();
         }
     }
 }

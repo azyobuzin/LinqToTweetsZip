@@ -42,6 +42,7 @@
     <Reference Include="System.IO.Compression.FileSystem" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="OptimizeVisitor.cs" />
     <Compile Include="TweetsZipQueryProvider.cs" />
     <Compile Include="Entities.cs" />
     <Compile Include="Entity.cs" />

@@ -1,15 +1,20 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Collections;
 using System.Linq.Expressions;
 
 namespace LinqToTweetsZip
 {
     internal class TweetsZipQueryProvider : IQueryProvider
     {
+        internal TweetsZipQueryProvider(TweetsZip context)
+        {
+            this.context = context;
+        }
+
+        private TweetsZip context;
+
         public IQueryable<TElement> CreateQuery<TElement>(Expression expression)
         {
             return new TweetsZipQueryable<TElement>(this, expression);
@@ -28,14 +33,20 @@ namespace LinqToTweetsZip
 
         public TResult Execute<TResult>(Expression expression)
         {
-            throw new NotImplementedException();
+            return (TResult)this.Execute(expression);
         }
 
         public object Execute(Expression expression)
         {
-            throw new NotImplementedException();
-            // DateTimeOffset 同士の比較を置き換える
-            // DateTimeOffset へのプロパティアクセスを置き換える
+            var t = expression.Type;
+            var isQueryable = t == typeof(IQueryable) ||
+                (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IQueryable<>));
+
+            var queryable = this.context.Months.SelectMany(_ => _).AsQueryable();
+            expression = new OptimizeVisitor(queryable).Visit(expression);
+            return isQueryable
+                ? queryable.Provider.CreateQuery(expression)
+                : queryable.Provider.Execute(expression);
         }
     }
 }
