@@ -13,7 +13,7 @@ Twitter の全ツイートダウンロードできるやつがあるじゃろ？
 # 使い方 #
 ## zip ファイルから読み込む ##
 ```csharp
-using (var source = TweetsZipFileSource(@"C:\tweets.zip"))
+using (var source = new TweetsZipFileSource(@"C:\tweets.zip"))
 {
     var tweetsZip = new TweetsZip(source);
 }
