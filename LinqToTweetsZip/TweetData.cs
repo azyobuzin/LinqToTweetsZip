@@ -36,5 +36,8 @@ namespace LinqToTweetsZip
 
         [JsonProperty("user")]
         public User User { get; private set; }
+
+        [JsonProperty("retweeted_status")]
+        public TweetData RetweetedStatus { get; private set; }
     }
 }

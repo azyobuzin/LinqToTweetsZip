@@ -15,30 +15,16 @@ namespace LinqToTweetsZip
         private IQueryable target;
 
         private static readonly Type tweetType = typeof(Tweet);
-        private ParameterExpression lambdaParameter;
-
-        protected override Expression VisitLambda<T>(Expression<T> node)
-        {
-            if (node.Parameters.Count > 0)
-            {
-                var prm = node.Parameters[0];
-                if (prm.Type == tweetType)
-                    this.lambdaParameter = prm;
-            }
-
-            return base.VisitLambda<T>(node);
-        }
-
         private static readonly PropertyInfo createdAtProperty = tweetType.GetProperty("CreatedAt");
 
-        private bool IsCreatedAtProperty(Expression expr)
+        private Expression GetCreatedAtPropertyContainer(Expression expr)
         {
-            if (expr == null || expr.NodeType != ExpressionType.MemberAccess || this.lambdaParameter == null)
-                return false;
+            if (expr == null || expr.NodeType != ExpressionType.MemberAccess)
+                return null;
 
             var mexpr = expr as MemberExpression;
             return mexpr != null && mexpr.Member == createdAtProperty
-                && mexpr.Expression == this.lambdaParameter;
+                ? mexpr.Expression : null;
         }
 
         private static bool opEquality(Tweet left, DateTimeOffset right)
@@ -98,8 +84,9 @@ namespace LinqToTweetsZip
         protected override Expression VisitBinary(BinaryExpression node)
         {
             MethodInfo method = null;
+            var tweetExpr = GetCreatedAtPropertyContainer(node.Left);
 
-            if (IsCreatedAtProperty(node.Left))
+            if (tweetExpr != null)
             {
                 switch (node.NodeType)
                 {
@@ -123,9 +110,9 @@ namespace LinqToTweetsZip
                         break;
                 }
                 if (method != null)
-                    return Expression.Call(method, lambdaParameter, this.Visit(node.Right));
+                    return Expression.Call(method, tweetExpr, this.Visit(node.Right));
             }
-            else if (IsCreatedAtProperty(node.Right))
+            else if ((tweetExpr = GetCreatedAtPropertyContainer(node.Right)) != null)
             {
                 switch (node.NodeType)
                 {
@@ -149,7 +136,7 @@ namespace LinqToTweetsZip
                         break;
                 }
                 if (method != null)
-                    return Expression.Call(method, lambdaParameter, this.Visit(node.Left));
+                    return Expression.Call(method, tweetExpr, this.Visit(node.Left));
             }
 
             return base.VisitBinary(node);
@@ -163,15 +150,16 @@ namespace LinqToTweetsZip
 
         protected override Expression VisitMember(MemberExpression node)
         {
-            if (node.NodeType == ExpressionType.MemberAccess && IsCreatedAtProperty(node.Expression))
+            var tweetExpr = GetCreatedAtPropertyContainer(node.Expression);
+            if (node.NodeType == ExpressionType.MemberAccess && tweetExpr != null)
             {
                 if (node.Member == yearProperty)
                 {
-                    return Expression.Field(lambdaParameter, yearField);
+                    return Expression.Field(tweetExpr, yearField);
                 }
                 else if (node.Member == monthProperty)
                 {
-                    return Expression.Field(lambdaParameter, monthField);
+                    return Expression.Field(tweetExpr, monthField);
                 }
             }
 

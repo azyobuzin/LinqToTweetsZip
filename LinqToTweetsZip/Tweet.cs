@@ -11,6 +11,13 @@ namespace LinqToTweetsZip
             this.month = parent.Month;
         }
 
+        private Tweet(TweetData data)
+        {
+            this.data = Lazy.Create(() => data);
+            this.year = data.CreatedAt.Year;
+            this.month = data.CreatedAt.Month;
+        }
+
         private readonly Lazy<TweetData> data;
 
         public string Source
@@ -66,6 +73,19 @@ namespace LinqToTweetsZip
             get
             {
                 return this.data.Value.User;
+            }
+        }
+
+        private Tweet retweetedStatus;
+        public Tweet RetweetedStatus
+        {
+            get
+            {
+                if (this.data.Value.RetweetedStatus == null)
+                    return null;
+                if (this.retweetedStatus == null)
+                    this.retweetedStatus = new Tweet(this.data.Value.RetweetedStatus);
+                return this.retweetedStatus;
             }
         }
 
